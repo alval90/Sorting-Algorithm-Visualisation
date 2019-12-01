@@ -29,7 +29,6 @@ class App extends React.Component {
   }
 
   bubbleSort = (arr, index = 0) =>  {
-    console.log(index);
     if(index === arr.length) {
       this.state.isSorted ? console.log("Eureka") : this.setState({arr: arr, isSorted: true},
         () => this.bubbleSort(this.state.arr, 0)  
@@ -58,8 +57,7 @@ class App extends React.Component {
 
   render() {
     const itemWidth = window.innerWidth / this.state.arr.length;
-    console.log(itemWidth);
-    let itemBlocks = this.state.arr.map(item => <ItemBlock itemWidth = {itemWidth} itemHeight = {item}/>)
+    let itemBlocks = this.state.arr.map((item, index) => <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item}/>)
     return (
       <div>
         <header style={{display:"flex",alignItems:"center"}}>

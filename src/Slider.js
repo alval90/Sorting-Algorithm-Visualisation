@@ -32,7 +32,6 @@ function InputSlider(props) {
   }
 
   const handleBlur = () => {
-    console.log("hi");
     if (value < 0) {
       setValue(0);
       props.changeArrSize(0);
