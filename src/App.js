@@ -12,7 +12,7 @@ class App extends React.Component {
     this.state = {
       arr: [2],
       algorithm: "",
-      isSorted: true
+      isSorted: false
     }
   };
 
@@ -51,13 +51,28 @@ class App extends React.Component {
   }
 
   handleClick = () => {
-    this.bubbleSort(this.state.arr);
-    //this.setState({arr: this.state.arr.sort((a,b) => a-b)});
+    switch (this.state.algorithm) {
+      case "Bubble":
+        this.bubbleSort(this.state.arr);
+        break;
+      case "Insertion":
+        break;
+      case "Merge":
+        break;
+      case "Quicksort":
+        break;
+      case "Heap":
+        break;
+      default:
+        break;
+    }
   }
 
   render() {
     const itemWidth = window.innerWidth / this.state.arr.length;
-    let itemBlocks = this.state.arr.map((item, index) => <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item}/>)
+    /* const blockColor = this.state.isSorted ? "#3ECF8E" : "#408AF8"; */
+    const blockColor = "#408AF8";
+    let itemBlocks = this.state.arr.map((item, index) => <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item} blockColor = {blockColor}/>)
     return (
       <div>
         <header style={{display:"flex",alignItems:"center"}}>
@@ -80,8 +95,6 @@ class App extends React.Component {
     );
   }
 }
-
-
 
 
 export default App;
