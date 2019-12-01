@@ -12,7 +12,7 @@ class App extends React.Component {
     this.state = {
       arr: [2],
       algorithm: "",
-      isSorted: false
+      isSorted: true
     }
   };
 
@@ -29,23 +29,24 @@ class App extends React.Component {
   }
 
   bubbleSort = (arr, index = 0) =>  {
-    if (arr[index] > arr[index + 1]) {
-      let temp = arr[index];
-      arr[index] = arr[index + 1];
-      arr[index + 1] = temp;
-      this.setState({arr: arr, isSorted: false}, 
-        () => setTimeout(() => index < arr.length - 1 ? this.bubbleSort(this.state.arr, index + 1) : this.bubbleSort(this.state.arr, 0), 30)
+    console.log(index);
+    if(index === arr.length) {
+      this.state.isSorted ? console.log("Eureka") : this.setState({arr: arr, isSorted: true},
+        () => this.bubbleSort(this.state.arr, 0)  
       );
     }
-    this.setState({arr: arr}, 
-      () => setTimeout(() => index < arr.length - 1 ? this.bubbleSort(this.state.arr, index + 1) : this.bubbleSort(this.state.arr, 0), 30)
-    );
-    if (this.state.isSorted === true) {
-      console.log("Eureka");
-    } else if (this.state.isSorted === false) {
-      console.log("hi");
-       else {
-
+    if (index < arr.length) {
+      if (arr[index] > arr[index + 1]) {
+        let temp = arr[index];
+        arr[index] = arr[index + 1];
+        arr[index + 1] = temp;
+        this.setState({arr: arr, isSorted: false}, 
+          () => setTimeout(() => this.bubbleSort(this.state.arr, index + 1), 30)
+        );
+      } else {
+        this.setState({arr: arr},
+          () => setTimeout(() => this.bubbleSort(this.state.arr, index + 1), 30)
+        );
       }
     }
   }
