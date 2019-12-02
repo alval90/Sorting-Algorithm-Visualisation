@@ -2,8 +2,9 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import SimpleMenu from './Menu';
 import InputSlider from './Slider';
-import ItemBlock from './ItemBlock'
+import ItemBlock from './ItemBlock';
 import './App.css';
+import algorithm from './Algorithms';
 
 
 class App extends React.Component {
@@ -31,7 +32,7 @@ class App extends React.Component {
   handleClick = () => {
     switch (this.state.algorithm) {
       case "Bubble":
-        bubbleSort.call(this,this.state.arr);
+        algorithm.bubbleSort.call(this, this.state.arr);
         break;
       case "Insertion":
         break;
@@ -71,28 +72,6 @@ class App extends React.Component {
           </div>
       </div>
     );
-  }
-}
-
-const bubbleSort = function (arr, index = 0)  {
-  if(index === arr.length) {
-    this.state.isSorted ? console.log("Eureka") : this.setState({arr: arr, isSorted: true},
-      () => bubbleSort.call(this, this.state.arr, 0)  
-    );
-  }
-  if (index < arr.length) {
-    if (arr[index] > arr[index + 1]) {
-      let temp = arr[index];
-      arr[index] = arr[index + 1];
-      arr[index + 1] = temp;
-      this.setState({arr: arr, isSorted: false}, 
-        () => setTimeout(() => bubbleSort.call(this,this.state.arr, index + 1), 30)
-      );
-    } else {
-      this.setState({arr: arr},
-        () => setTimeout(() => bubbleSort.call(this,this.state.arr, index + 1), 30)
-      );
-    }
   }
 }
 
