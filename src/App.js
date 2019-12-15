@@ -13,7 +13,8 @@ class App extends React.Component {
     this.state = {
       arr: [2],
       algorithm: "",
-      isSorted: false
+      isSorted: false,
+      itemBlockStatus: []
     }
   };
 
@@ -23,16 +24,18 @@ class App extends React.Component {
 
   changeArrSize = size => {
     let arr = [];
+    let itemBlockStatus = [];
     for (let i = 0; i < size; i++) {
       arr.push(Math.random() * 100);
+      itemBlockStatus.push("default");
     }
-    this.setState({arr: arr});
+    this.setState({arr: arr, itemBlockStatus: itemBlockStatus});
   }
 
   handleClick = () => {
     switch (this.state.algorithm) {
       case "Bubble":
-        algorithm.bubbleSort.call(this, this.state.arr);
+        algorithm.bubbleSort.call(this, this.state.arr, this.state.itemBlockStatus);
         break;
       case "Insertion":
         break;
@@ -48,10 +51,11 @@ class App extends React.Component {
   }
 
   render() {
-    const itemWidth = window.innerWidth / this.state.arr.length;
-    /* const blockColor = this.state.isSorted ? "#3ECF8E" : "#408AF8"; */
-    const blockColor = "#408AF8";
-    let itemBlocks = this.state.arr.map((item, index) => <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item} blockColor = {blockColor}/>)
+    const itemWidth = window.innerWidth / this.state.arr.length - 2;
+    let itemBlocks = this.state.arr.map((item, index) => {
+      let blockColor = setColor(this.state.itemBlockStatus[index]);
+      return <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item} blockColor = {blockColor}/>;
+    })
     return (
       <div>
         <header style={{display:"flex",alignItems:"center"}}>
@@ -72,6 +76,17 @@ class App extends React.Component {
           </div>
       </div>
     );
+  }
+}
+
+function setColor(itemBlockStatus) {
+  switch (itemBlockStatus) {
+    case "analyzed":
+      return "orange";
+    case "sorted":
+      return "#3ECF8E";
+    default:
+      return "#408AF8";
   }
 }
 
