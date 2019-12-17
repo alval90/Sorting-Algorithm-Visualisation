@@ -37,6 +37,9 @@ class App extends React.Component {
       case "Bubble":
         algorithm.bubbleSort.call(this, this.state.arr, this.state.itemBlockStatus);
         break;
+      case "Selection":
+        algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus);
+        break
       case "Insertion":
         break;
       case "Merge":

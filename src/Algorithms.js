@@ -21,20 +21,46 @@ const algorithm = {
       }
     }
   },
-  selectionSort: function (arr) {
-    for (let i = 0; i < arr.length; i++) {
-      let minIndex = i;
-      for (let j = i; j < arr.length; j++) {
-        if(arr[j] < arr[minIndex]) {
-          minIndex = j;
-        }    
+  selectionSort: function (arr, itemBlockStatus, index = 0, minIndex = 0, counter = 0) {
+    if (index < arr.length) {
+      if (arr[index] < arr[minIndex]) {
+        minIndex = index;
+        this.setState({arr: arr, itemBlockStatus: itemBlockStatus, isSorted: false},
+          () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, minIndex, counter), 30)
+        );
       }
-      let tmp = arr[i];
-      arr[i] = arr[minIndex];
-      arr[minIndex] = tmp;
+      this.setState({arr: arr, itemBlockStatus: itemBlockStatus},
+        () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, minIndex, counter))
+      );
+    } else {
+      if (this.state.isSorted) {
+        console.log("finished");
+        this.setState({itemBlockStatus: itemBlockStatus.fill("sorted")});
+      } else {
+        console.log("swapped");
+        let tmp = arr[counter];
+        arr[counter] = arr[minIndex];
+        arr[minIndex] = tmp;
+        this.setState({arr: arr, itemBlockStatus: itemBlockStatus, isSorted: true},
+          () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, index + 1, counter + 1), 30)
+        ); 
+      }
     }
-    return arr;
   }
+  // selectionSort: function (arr) {
+  //   for (let i = 0; i < arr.length; i++) {
+  //     let minIndex = i;
+  //     for (let j = i; j < arr.length; j++) {
+  //       if(arr[j] < arr[minIndex]) {
+  //         minIndex = j;
+  //       }    
+  //     }
+  //     let tmp = arr[i];
+  //     arr[i] = arr[minIndex];
+  //     arr[minIndex] = tmp;
+  //   }
+  //   return arr;
+  // }
 }
 
 function setItemBlockStatus (itemBlockStatus, index) {
