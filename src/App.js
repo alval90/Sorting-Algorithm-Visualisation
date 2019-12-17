@@ -85,7 +85,7 @@ class App extends React.Component {
 function setColor(itemBlockStatus) {
   switch (itemBlockStatus) {
     case "analyzed":
-      return "orange";
+      return "#F98334";
     case "sorted":
       return "#3ECF8E";
     default:

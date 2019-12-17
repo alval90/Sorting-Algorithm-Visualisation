@@ -32,9 +32,9 @@ const algorithm = {
       // Change status of itemBlocks to highlight in respective color
       if (arr[index] <= arr[minIndex]) {
         itemBlockStatus[minIndex] = "default";
-        minIndex = index;
-        itemBlockStatus[minIndex] = "analyzed";
+        itemBlockStatus[index] = "analyzed";
         itemBlockStatus[index + 1] = "analyzed";
+        minIndex = index;
         this.setState({arr: arr, itemBlockStatus: itemBlockStatus, isSorted: false},
           () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, minIndex, counter), 30)
         );
@@ -64,6 +64,19 @@ const algorithm = {
         ); 
       }
     }
+  },
+  insertionSort: function (arr) {
+    // change code below this line
+    for (let i = 0; i < arr.length; i++) {
+      for (let j = i; j >= 0; j--) {
+        if (arr[j] <= arr[j -1]) {
+          let tmp = arr[j];
+          arr[j] = arr[j - 1];
+          arr[j - 1] = tmp;
+        }
+      }
+    }
+    return arr;
   }
 }
 
