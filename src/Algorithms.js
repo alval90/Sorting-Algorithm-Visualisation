@@ -28,13 +28,14 @@ const algorithm = {
         this.setState({arr: arr, itemBlockStatus: itemBlockStatus, isSorted: false},
           () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, minIndex, counter), 30)
         );
+      } else if (arr[index] >= arr[minIndex]) {
+        this.setState({arr: arr, itemBlockStatus: itemBlockStatus},
+          () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, minIndex, counter), 30)
+        );
       }
-      this.setState({arr: arr, itemBlockStatus: itemBlockStatus},
-        () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, minIndex, counter))
-      );
     } else {
       if (this.state.isSorted) {
-        console.log("finished");
+        console.log(counter);
         this.setState({itemBlockStatus: itemBlockStatus.fill("sorted")});
       } else {
         console.log("swapped");
@@ -42,7 +43,7 @@ const algorithm = {
         arr[counter] = arr[minIndex];
         arr[minIndex] = tmp;
         this.setState({arr: arr, itemBlockStatus: itemBlockStatus, isSorted: true},
-          () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, index + 1, counter + 1), 30)
+          () => setTimeout(() => algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus, counter + 1, counter + 1, counter + 1), 30)
         ); 
       }
     }
