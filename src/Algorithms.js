@@ -77,6 +77,38 @@ const algorithm = {
       }
     }
     return arr;
+  },
+  quickSort: function (arr) {
+    if (arr.length <= 1) {
+      return arr;
+    }
+    let pivot = arr[0];
+    let right = [];
+    let equal = [];
+    let left = [];
+    for (let i = 1; i < arr.length; i++) {
+      if (arr[i] < pivot) {
+        left.push(arr[i]);
+      } else if (arr[i] === pivot) {
+        equal.push(arr[i]);
+      } else if (arr[i] > pivot) {
+        right.push(arr[i]);
+      }
+    }
+    arr = quickSort(left).concat(equal, pivot, quickSort(right));
+    return arr;
+  },
+  mergeSort: function (arr) {
+      if (arr.length <= 1) {
+        return arr;
+      }
+      let leftHalf = arr.splice(0, Math.floor(array.length/2));
+      let rightHalf = arr.splice(0, array.length);
+      let left = mergeSort(leftHalf);
+      let right = mergeSort (rightHalf);
+      arr = merge (left, right);
+      return arr;
+    }
   }
 }
 
@@ -98,6 +130,24 @@ function swapValues (arr, index) {
   arr[index] = arr[index + 1];
   arr[index + 1] = tmp;
   return arr;
+}
+
+    
+function merge (left, right, newArray = []) {
+  while (left.length > 0 && right.length > 0) {
+    if (left[0] < right[0]) {
+      newArray = [...newArray, left.shift()];
+    } else {
+      newArray = [...newArray, right.shift()];
+    }
+  } 
+  while (left.length > 0) {
+    newArray = [...newArray, left.shift()];
+  } 
+  while (right.length > 0) {
+    newArray = [...newArray, right.shift()];
+  }
+  return newArray;
 }
 
 export default algorithm;

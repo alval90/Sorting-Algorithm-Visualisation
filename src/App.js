@@ -11,6 +11,7 @@ class App extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
+      // TODO: Merge arr and itemBlockStatus into object
       arr: [2],
       algorithm: "",
       isSorted: false,
@@ -43,8 +44,10 @@ class App extends React.Component {
       case "Insertion":
         break;
       case "Merge":
+        algorithm.mergeSort.call(this, this.state.arr, this.state.itemBlockStatus);
         break;
       case "Quicksort":
+        algorithm.quickSort.call(this, this.state.arr, this.state.itemBlockStatus);
         break;
       case "Heap":
         break;
