@@ -12,12 +12,15 @@ class App extends React.Component {
     super(props);
     this.state = {
       // TODO: Merge arr and itemBlockStatus into object
-      arr: [2],
+      arr: [],
       algorithm: "",
-      isSorted: false,
-      itemBlockStatus: []
+      isSorted: false
     }
   };
+
+  componentDidMount () {
+    this.changeArrSize(30);
+  }
 
   changeAlgorithm = algorithm => {
     this.setState({algorithm: algorithm});
@@ -25,21 +28,19 @@ class App extends React.Component {
 
   changeArrSize = size => {
     let arr = [];
-    let itemBlockStatus = [];
     for (let i = 0; i < size; i++) {
-      arr.push(Math.random() * 100);
-      itemBlockStatus.push("default");
+      arr.push(new Item(Math.random() * (100 - 5) + 5, "default", i));
     }
-    this.setState({arr: arr, itemBlockStatus: itemBlockStatus});
+    this.setState({arr: arr});
   }
 
   handleClick = () => {
     switch (this.state.algorithm) {
       case "Bubble":
-        algorithm.bubbleSort.call(this, this.state.arr, this.state.itemBlockStatus);
+        algorithm.bubbleSort.call(this, this.state.arr);
         break;
       case "Selection":
-        algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus);
+        algorithm.selectionSort.call(this, this.state.arr);
         break
       case "Insertion":
         break;
@@ -57,21 +58,22 @@ class App extends React.Component {
   }
 
   render() {
-    const itemWidth = window.innerWidth / this.state.arr.length - 2;
-    let itemBlocks = this.state.arr.map((item, index) => {
-      let blockColor = setColor(this.state.itemBlockStatus[index]);
-      return <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item} blockColor = {blockColor}/>;
+    let { arr, algorithm } = this.state;
+    const itemWidth = calculateItemWidth(arr.length);
+    let itemBlocks = arr.map((item, index) => {
+      let blockColor = setColor(item.status);
+      return <ItemBlock key={index} itemWidth = {itemWidth} itemHeight = {item.height} blockColor = {blockColor}/>;
     })
     return (
       <div>
-        <header style={{display:"flex",alignItems:"center"}}>
-          <div style={{display:"flex",flex:1,justifyContent:"center"}}>
-            <SimpleMenu changeAlgorithm = {this.changeAlgorithm} algorithm = {this.state.algorithm}/>
+        <header style={{display:"flex", alignItems:"center"}}>
+          <div style={{display:"flex", flex:1, justifyContent:"center"}}>
+            <SimpleMenu changeAlgorithm = {this.changeAlgorithm} algorithm = {algorithm}/>
           </div>
-          <div style={{display:"flex",flex:1,justifyContent:"center"}}>
+          <div style={{display:"flex", flex:1, justifyContent:"center"}}>
             <InputSlider changeArrSize = {this.changeArrSize}/>
           </div>
-          <div style={{display:"flex",flex:1,justifyContent:"center"}}>
+          <div style={{display:"flex", flex:1, justifyContent:"center"}}>
             <Button variant="contained" color="primary" onClick={this.handleClick}>
               Sort Array
             </Button>
@@ -83,6 +85,18 @@ class App extends React.Component {
       </div>
     );
   }
+}
+
+class Item {
+  constructor (height, status, index) {
+    this.height = height;
+    this.status = status;
+    this.index = index;
+  }
+}
+
+function calculateItemWidth (itemCount) {
+  return window.innerWidth / itemCount - 2;
 }
 
 function setColor(itemBlockStatus) {
