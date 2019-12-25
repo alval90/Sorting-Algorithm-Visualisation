@@ -1,9 +1,9 @@
 const algorithm = {
   bubbleSort: function(arr, index = 0, counter = 0) {
     if (index === arr.length - counter - 1) {
-      arr[index].status = "sorted";
+      arr = setItemStatus(arr, [], [], [index]);
       if (this.state.isSorted) {
-        arr.map(item => (item.status = "sorted"));
+        arr = setItemStatus(arr, [], [], [], true);
         this.setState({ arr: arr });
       } else {
         this.setState({ arr: arr, isSorted: true }, () =>
@@ -14,8 +14,8 @@ const algorithm = {
     }
     if (index < arr.length) {
       if (arr[index].height > arr[index + 1].height) {
-        arr = swapItems(arr, index);
-        arr = setItemStatus(arr, index);
+        arr = swapItems(arr, index, index + 1);
+        arr = setItemStatus(arr, [index], [index + 1, index + 2]);
         this.setState({ arr: arr, isSorted: false }, () =>
           setTimeout(
             () =>
@@ -30,7 +30,7 @@ const algorithm = {
         );
         return;
       } else {
-        arr = setItemStatus(arr, index);
+        arr = setItemStatus(arr, [index], [index + 1, index + 2]);
         this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
@@ -57,11 +57,7 @@ const algorithm = {
       // Define new minimum, if current item that is being analyzed is smaller than the current minimum
       // Change status of itemBlocks to highlight in respective color
       if (arr[index].height <= arr[minIndex].height) {
-        arr[minIndex].status = "default";
-        arr[index].status = "analyzed";
-        if (arr[index + 1]) {
-          arr[index + 1].status = "analyzed";
-        }
+        arr = setItemStatus(arr, [minIndex], [index, index + 1]);
         minIndex = index;
         this.setState({ arr: arr, isSorted: false }, () =>
           setTimeout(
@@ -79,10 +75,7 @@ const algorithm = {
         // Move one item ahead, if current item that is being analyzed is not smaller than the current minimum
         // Change status accordingly to use color highlighting
       } else if (arr[index].height > arr[minIndex].height) {
-        arr[index].status = "default";
-        if (arr[index + 1]) {
-          arr[index + 1].status = "analyzed";
-        }
+        arr = setItemStatus(arr, [index], [index + 1]);
         this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
@@ -101,17 +94,11 @@ const algorithm = {
       // Swap new minimum with current starting item of the loop - Otherwise, consider array as sorted and fill the itemBlockStatus accordingly for color highlighting.
     } else {
       if (this.state.isSorted) {
-        arr.map(item => (item.status = "sorted"));
+        arr = setItemStatus(arr, [], [], [], true);
         this.setState({ arr: arr });
       } else {
-        let tmp = arr[counter];
-        arr[counter] = arr[minIndex];
-        arr[minIndex] = tmp;
-        arr[minIndex].status = "default";
-        arr[counter].status = "sorted";
-        if (arr[counter + 1]) {
-          arr[counter + 1].status = "analyzed";
-        }
+        arr = swapItems(arr, counter, minIndex);
+        arr = setItemStatus(arr, [minIndex], [counter + 1], [counter]);
         this.setState({ arr: arr, isSorted: true }, () =>
           setTimeout(
             () =>
@@ -176,25 +163,32 @@ const algorithm = {
   }
 };
 
-function setItemStatus(arr, index) {
-  if (arr[index].status !== "sorted") {
-    arr[index].status = "default";
-  }
-  if (arr[index + 1].status !== "sorted") {
-    arr[index + 1].status = "analyzed";
-  }
-  if (arr[index + 2]) {
-    if (arr[index + 2].status !== "sorted") {
-      arr[index + 2].status = "analyzed";
+function setItemStatus(arr, defaultItems = [], analyzedItems = [], sortedItems = [], globalySorted = false) {
+  for (let i = 0; i < defaultItems.length; i++) {
+    if (arr[defaultItems[i]] && arr[defaultItems[i]].status !== "sorted") {
+      arr[defaultItems[i]].status = "default";
     }
+  }
+  for (let i = 0; i < analyzedItems.length; i++) {
+    if (arr[analyzedItems[i]] && arr[analyzedItems[i]].status !== "sorted") {
+      arr[analyzedItems[i]].status = "analyzed";
+    }
+  }
+  for (let i = 0; i < sortedItems.length; i++) {
+    if (arr[sortedItems[i]]) {
+      arr[sortedItems[i]].status = "sorted";
+    }
+  }
+  if (globalySorted) {
+    arr.map(item => (item.status = "sorted"));
   }
   return arr;
 }
 
-function swapItems(arr, index) {
-  let tmp = arr[index];
-  arr[index] = arr[index + 1];
-  arr[index + 1] = tmp;
+function swapItems(arr, firstItemIndex, secondItemIndex) {
+  let tmp = arr[firstItemIndex];
+  arr[firstItemIndex] = arr[secondItemIndex];
+  arr[secondItemIndex] = tmp;
   return arr;
 }
 
