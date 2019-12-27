@@ -159,11 +159,24 @@ const algorithm = {
     let left = algorithm.mergeSort.call(this, leftHalf);
     let right = algorithm.mergeSort.call(this, rightHalf);
     arr = merge.call(this, left, right);
+    setDelay.call(this, arr);
     return arr;
-  }
+  },
+  mergeSortWrapper: function(arr) {
+    algorithm.mergeSort.call(this, arr);
+    console.log("x: " + algorithm.counter);
+    algorithm.counter = 0;
+  },
+  counter: 0
 };
 
-function setItemStatus(arr, defaultItems = [], analyzedItems = [], sortedItems = [], globalySorted = false) {
+function setItemStatus(
+  arr,
+  defaultItems = [],
+  analyzedItems = [],
+  sortedItems = [],
+  isSorted = false
+) {
   for (let i = 0; i < defaultItems.length; i++) {
     if (arr[defaultItems[i]] && arr[defaultItems[i]].status !== "sorted") {
       arr[defaultItems[i]].status = "default";
@@ -179,7 +192,7 @@ function setItemStatus(arr, defaultItems = [], analyzedItems = [], sortedItems =
       arr[sortedItems[i]].status = "sorted";
     }
   }
-  if (globalySorted) {
+  if (isSorted) {
     arr.map(item => (item.status = "sorted"));
   }
   return arr;
@@ -195,22 +208,27 @@ function swapItems(arr, firstItemIndex, secondItemIndex) {
 function merge(left, right, sortedArray = []) {
   while (left.length > 0 && right.length > 0) {
     if (left[0].height < right[0].height) {
-      console.log(left[0].index);
       sortedArray = [...sortedArray, left.shift()];
     } else {
-      console.log(right[0].index);
       sortedArray = [...sortedArray, right.shift()];
     }
   }
   while (left.length > 0) {
-    console.log(left[0].index);
     sortedArray = [...sortedArray, left.shift()];
   }
   while (right.length > 0) {
-    console.log(right[0].index);
     sortedArray = [...sortedArray, right.shift()];
   }
   return sortedArray;
+}
+
+function setDelay(input) {
+  let i = [...input];
+  setTimeout(() => {
+    this.setState({ arr: i });
+    console.log(i);
+  }, algorithm.counter * 300);
+  algorithm.counter += 1;
 }
 
 export default algorithm;

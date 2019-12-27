@@ -1,18 +1,18 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
-import Input from '@material-ui/core/Input';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Slider from "@material-ui/core/Slider";
+import Input from "@material-ui/core/Input";
 
 const useStyles = makeStyles({
-    root: {
-      width: 250,
-    },
-    input: {
-      width: 42,
-    },
-  });
+  root: {
+    width: 250
+  },
+  input: {
+    width: 42
+  }
+});
 
 function InputSlider(props) {
   const classes = useStyles();
@@ -23,13 +23,13 @@ function InputSlider(props) {
   };
 
   const handleInputChange = event => {
-    setValue(event.target.value === '' ? '' : Number(event.target.value));
+    setValue(event.target.value === "" ? "" : Number(event.target.value));
     props.changeArrSize(Number(event.target.value));
   };
 
   const handleSliderCommit = (event, value) => {
     props.changeArrSize(Number(value));
-  }
+  };
 
   const handleBlur = () => {
     if (value < 0) {
@@ -49,7 +49,7 @@ function InputSlider(props) {
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
           <Slider
-            value={typeof value === 'number' ? value : 0}
+            value={typeof value === "number" ? value : 0}
             onChange={handleSliderChange}
             aria-labelledby="input-slider"
             onChangeCommitted={handleSliderCommit}
@@ -66,8 +66,8 @@ function InputSlider(props) {
               step: 10,
               min: 0,
               max: 100,
-              type: 'number',
-              'aria-labelledby': 'input-slider',
+              type: "number",
+              "aria-labelledby": "input-slider"
             }}
           />
         </Grid>
