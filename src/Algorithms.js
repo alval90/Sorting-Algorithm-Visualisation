@@ -1,13 +1,13 @@
 const algorithm = {
-  bubbleSort: function(arr, index = 0, counter = 0) {
+  bubbleSort: function(arr, index = 0, counter = 0, isSorted = false) {
     if (index === arr.length - counter - 1) {
       arr = setItemStatus(arr, [], [], [index]);
-      if (this.state.isSorted) {
+      if (isSorted) {
         arr = setItemStatus(arr, [], [], [], true);
-        this.setState({ arr: arr });
+        this.setState({ arr: arr, isSorted: true, sorting: false });
       } else {
         this.setState({ arr: arr, isSorted: true }, () =>
-          algorithm.bubbleSort.call(this, this.state.arr, 0, counter + 1)
+          algorithm.bubbleSort.call(this, this.state.arr, 0, counter + 1, true)
         );
       }
       return;
@@ -16,14 +16,15 @@ const algorithm = {
       if (arr[index].height > arr[index + 1].height) {
         arr = swapItems(arr, index, index + 1);
         arr = setItemStatus(arr, [index], [index + 1, index + 2]);
-        this.setState({ arr: arr, isSorted: false }, () =>
+        this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
               algorithm.bubbleSort.call(
                 this,
                 this.state.arr,
                 index + 1,
-                counter
+                counter,
+                false
               ),
             30
           )
@@ -51,7 +52,13 @@ const algorithm = {
   // 1) Move break condition to top of recursive function for better readability
   // 2) Reduce amount of loops by one via skipping the first iteration
   // 3) Encapsulate color highlighting and value swapping
-  selectionSort: function(arr, index = 0, minIndex = 0, counter = 0) {
+  selectionSort: function(
+    arr,
+    index = 0,
+    minIndex = 0,
+    counter = 0,
+    isSorted = false
+  ) {
     // Check if every itemblock has been considered as current minimum value
     if (index < arr.length) {
       // Define new minimum, if current item that is being analyzed is smaller than the current minimum
@@ -59,7 +66,7 @@ const algorithm = {
       if (arr[index].height <= arr[minIndex].height) {
         arr = setItemStatus(arr, [minIndex], [index, index + 1]);
         minIndex = index;
-        this.setState({ arr: arr, isSorted: false }, () =>
+        this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
               algorithm.selectionSort.call(
@@ -67,7 +74,8 @@ const algorithm = {
                 this.state.arr,
                 index + 1,
                 minIndex,
-                counter
+                counter,
+                false
               ),
             30
           )
@@ -93,13 +101,13 @@ const algorithm = {
       // After going through all items to check for a new minimum, check if items need to be swapped to further sort the array
       // Swap new minimum with current starting item of the loop - Otherwise, consider array as sorted and fill the itemBlockStatus accordingly for color highlighting.
     } else {
-      if (this.state.isSorted) {
+      if (isSorted) {
         arr = setItemStatus(arr, [], [], [], true);
-        this.setState({ arr: arr });
+        this.setState({ arr: arr, isSorted: true, sorting: false });
       } else {
         arr = swapItems(arr, counter, minIndex);
         arr = setItemStatus(arr, [minIndex], [counter + 1], [counter]);
-        this.setState({ arr: arr, isSorted: true }, () =>
+        this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
               algorithm.selectionSort.call(
@@ -107,7 +115,8 @@ const algorithm = {
                 this.state.arr,
                 counter + 1,
                 counter + 1,
-                counter + 1
+                counter + 1,
+                true
               ),
             30
           )
@@ -128,27 +137,42 @@ const algorithm = {
     }
     return arr;
   },
-  quickSort: function(arr) {
-    if (arr.length <= 1) {
-      return arr;
+  // quickSort: function(arr) {
+  //   if (arr.length <= 1) {
+  //     return arr;
+  //   }
+  //   let pivot = arr[0];
+  //   let right = [];
+  //   let equal = [];
+  //   let left = [];
+  //   for (let i = 1; i < arr.length; i++) {
+  //     if (arr[i] < pivot) {
+  //       left.push(arr[i]);
+  //     } else if (arr[i] === pivot) {
+  //       equal.push(arr[i]);
+  //     } else if (arr[i] > pivot) {
+  //       right.push(arr[i]);
+  //     }
+  //   }
+  //   arr = algorithm
+  //     .quickSort(left)
+  //     .concat(equal, pivot, algorithm.quickSort(right));
+  //   return arr;
+  // },
+  quickSort: function(arr, left, right) {
+    if (left < right) {
+      let pivot = right;
+      let partitionIndex = partition.call(this, arr, pivot, left, right);
+      algorithm.quickSort.call(this, arr, left, partitionIndex - 1);
+      algorithm.quickSort.call(this, arr, partitionIndex + 1, right);
     }
-    let pivot = arr[0];
-    let right = [];
-    let equal = [];
-    let left = [];
-    for (let i = 1; i < arr.length; i++) {
-      if (arr[i] < pivot) {
-        left.push(arr[i]);
-      } else if (arr[i] === pivot) {
-        equal.push(arr[i]);
-      } else if (arr[i] > pivot) {
-        right.push(arr[i]);
-      }
-    }
-    arr = algorithm
-      .quickSort(left)
-      .concat(equal, pivot, algorithm.quickSort(right));
     return arr;
+  },
+  quickSortWrapper: function(arr, left, right) {
+    algorithm.quickSort.call(this, arr, left, right);
+    arr.map(item => (item.status = "sorted"));
+    setDelay.call(this, arr, true);
+    algorithm.counter = 1;
   },
   mergeSort: function(arr) {
     if (arr.length <= 1) {
@@ -273,7 +297,7 @@ function merge(left, right, sortedArray = []) {
   }
   if (algorithm.stateArr.length === sortedArray.length) {
     algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [], [], true);
-    setDelay.call(this, algorithm.stateArr);
+    setDelay.call(this, algorithm.stateArr, true);
   }
   return sortedArray;
 }
@@ -287,12 +311,41 @@ function findMinimum(unsortedArr, sortedArray) {
     }
   }
 }
-function setDelay(input) {
+function setDelay(input, isSorted) {
   let i = JSON.parse(JSON.stringify(input));
   setTimeout(() => {
-    this.setState({ arr: i });
+    if (isSorted) {
+      this.setState({ arr: i, isSorted: true, sorting: false });
+    } else {
+      this.setState({ arr: i });
+    }
   }, algorithm.counter * 30);
   algorithm.counter += 1;
+}
+
+//https://khan4019.github.io/front-end-Interview-Questions/sort.html#quickSort
+function partition(arr, pivot, left, right) {
+  let pivotValue = arr[pivot].height;
+  let partitionIndex = left;
+
+  for (var i = left; i < right; i++) {
+    arr = setItemStatus(arr, [], [i, partitionIndex]);
+    if (arr[i].height < pivotValue) {
+      arr = swapItems(arr, i, partitionIndex);
+      setDelay.call(this, arr);
+      partitionIndex++;
+    }
+    arr = setItemStatus(arr, [i, partitionIndex], []);
+    setDelay.call(this, arr);
+    algorithm.counter -= 1;
+  }
+  arr = setItemStatus(arr, [], [i, partitionIndex]);
+  arr = swapItems(arr, right, partitionIndex);
+  setDelay.call(this, arr);
+  arr = setItemStatus(arr, [i, partitionIndex], []);
+  setDelay.call(this, arr);
+  algorithm.counter -= 1;
+  return partitionIndex;
 }
 
 export default algorithm;

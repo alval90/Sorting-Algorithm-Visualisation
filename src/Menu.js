@@ -24,7 +24,7 @@ const SimpleMenu = function(props) {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        {props.algorithm || "Open Menu"}
+        {props.algorithm || "Choose Algorithm"}
       </Button>
       <Menu
         id="simple-menu"

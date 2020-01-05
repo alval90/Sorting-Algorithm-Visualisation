@@ -12,7 +12,8 @@ class App extends React.Component {
     this.state = {
       arr: [],
       algorithm: "",
-      isSorted: false
+      isSorted: false,
+      sorting: false
     };
   }
 
@@ -30,28 +31,37 @@ class App extends React.Component {
       let randomHeight = calcRandomInIntervall(5, 100);
       arr.push(new Item(randomHeight, "default", i));
     }
-    this.setState({ arr: arr });
+    this.setState({ arr: arr, isSorted: false });
   };
 
   handleClick = () => {
-    let arr = JSON.parse(JSON.stringify(this.state.arr));
-    switch (this.state.algorithm) {
-      case "Bubble":
-        algorithm.bubbleSort.call(this, arr);
-        break;
-      case "Selection":
-        algorithm.selectionSort.call(this, arr);
-        break;
-      case "Insertion":
-        break;
-      case "Quicksort":
-        algorithm.quickSort.call(this, arr, this.state.itemBlockStatus);
-        break;
-      case "Merge":
-        algorithm.mergeSortWrapper.call(this, arr);
-        break;
-      default:
-        break;
+    if (!this.state.isSorted && !this.state.sorting) {
+      this.setState({ sorting: true });
+      let arr = JSON.parse(JSON.stringify(this.state.arr));
+      switch (this.state.algorithm) {
+        case "Bubble":
+          algorithm.bubbleSort.call(this, arr);
+          break;
+        case "Selection":
+          algorithm.selectionSort.call(this, arr);
+          break;
+        case "Insertion":
+          break;
+        case "Quicksort":
+          algorithm.quickSortWrapper.call(this, arr, 0, arr.length - 1);
+          break;
+        case "Merge":
+          algorithm.mergeSortWrapper.call(this, arr);
+          break;
+        default:
+          break;
+      }
+    } else if (!this.state.isSorted && this.state.sorting) {
+    } else {
+      let arr = JSON.parse(JSON.stringify(this.state.arr));
+      arr.sort((a, b) => a.index - b.index);
+      arr.map(item => (item.status = "default"));
+      this.setState({ arr: arr, isSorted: false });
     }
   };
 
@@ -79,15 +89,23 @@ class App extends React.Component {
             />
           </div>
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
-            <InputSlider changeArrSize={this.changeArrSize} />
+            <InputSlider
+              disabled={this.state.sorting}
+              changeArrSize={this.changeArrSize}
+            />
           </div>
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <Button
+              disabled={this.state.sorting}
               variant="contained"
               color="primary"
               onClick={this.handleClick}
             >
-              Sort Array
+              {this.state.sorting
+                ? "SORTING..."
+                : this.state.isSorted
+                ? "RESET"
+                : "SORT"}
             </Button>
           </div>
         </header>

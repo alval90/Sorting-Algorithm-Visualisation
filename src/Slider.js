@@ -49,6 +49,7 @@ function InputSlider(props) {
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
           <Slider
+            disabled={props.disabled}
             value={typeof value === "number" ? value : 0}
             onChange={handleSliderChange}
             aria-labelledby="input-slider"
@@ -57,6 +58,7 @@ function InputSlider(props) {
         </Grid>
         <Grid item>
           <Input
+            disabled={props.disabled}
             className={classes.input}
             value={value}
             margin="dense"
