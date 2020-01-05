@@ -159,15 +159,15 @@ const algorithm = {
     let left = algorithm.mergeSort.call(this, leftHalf);
     let right = algorithm.mergeSort.call(this, rightHalf);
     arr = merge.call(this, left, right);
-    setDelay.call(this, arr);
     return arr;
   },
   mergeSortWrapper: function(arr) {
+    algorithm.stateArr = JSON.parse(JSON.stringify(arr));
     algorithm.mergeSort.call(this, arr);
-    console.log("x: " + algorithm.counter);
-    algorithm.counter = 0;
+    algorithm.counter = 1;
   },
-  counter: 0
+  counter: 1,
+  stateArr: []
 };
 
 function setItemStatus(
@@ -207,6 +207,25 @@ function swapItems(arr, firstItemIndex, secondItemIndex) {
 
 function merge(left, right, sortedArray = []) {
   while (left.length > 0 && right.length > 0) {
+    for (let i = 0; i < algorithm.stateArr.length; i++) {
+      if (
+        algorithm.stateArr[i].index === left[0].index ||
+        algorithm.stateArr[i].index === right[0].index
+      ) {
+        algorithm.stateArr[i].status = "analyzed";
+      }
+    }
+    setDelay.call(this, algorithm.stateArr);
+    for (let i = 0; i < algorithm.stateArr.length; i++) {
+      if (
+        algorithm.stateArr[i].index === left[0].index ||
+        algorithm.stateArr[i].index === right[0].index
+      ) {
+        algorithm.stateArr[i].status = "default";
+      }
+    }
+    setDelay.call(this, algorithm.stateArr);
+    algorithm.counter -= 1;
     if (left[0].height < right[0].height) {
       sortedArray = [...sortedArray, left.shift()];
     } else {
@@ -214,20 +233,65 @@ function merge(left, right, sortedArray = []) {
     }
   }
   while (left.length > 0) {
+    for (let i = 0; i < algorithm.stateArr.length; i++) {
+      if (algorithm.stateArr[i].index === left[0].index) {
+        algorithm.stateArr[i].status = "analyzed";
+      }
+    }
+    setDelay.call(this, algorithm.stateArr);
+    for (let i = 0; i < algorithm.stateArr.length; i++) {
+      if (algorithm.stateArr[i].index === left[0].index) {
+        algorithm.stateArr[i].status = "default";
+      }
+    }
+    setDelay.call(this, algorithm.stateArr);
+    algorithm.counter -= 1;
     sortedArray = [...sortedArray, left.shift()];
   }
   while (right.length > 0) {
+    for (let i = 0; i < algorithm.stateArr.length; i++) {
+      if (algorithm.stateArr[i].index === right[0].index) {
+        algorithm.stateArr[i].status = "analyzed";
+      }
+    }
+    setDelay.call(this, algorithm.stateArr);
+    for (let i = 0; i < algorithm.stateArr.length; i++) {
+      if (algorithm.stateArr[i].index === right[0].index) {
+        algorithm.stateArr[i].status = "default";
+      }
+    }
+    setDelay.call(this, algorithm.stateArr);
+    algorithm.counter -= 1;
     sortedArray = [...sortedArray, right.shift()];
+  }
+  let minimum = findMinimum(algorithm.stateArr, sortedArray);
+  for (let i = 0; i < sortedArray.length; i++) {
+    algorithm.stateArr[minimum + i] = JSON.parse(
+      JSON.stringify(sortedArray[i])
+    );
+    setDelay.call(this, algorithm.stateArr);
+  }
+  if (algorithm.stateArr.length === sortedArray.length) {
+    algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [], [], true);
+    setDelay.call(this, algorithm.stateArr);
   }
   return sortedArray;
 }
 
+function findMinimum(unsortedArr, sortedArray) {
+  for (let i = 0; i < unsortedArr.length; i++) {
+    for (let j = 0; j < sortedArray.length; j++) {
+      if (unsortedArr[i].index === sortedArray[j].index) {
+        return i;
+      }
+    }
+  }
+}
 function setDelay(input) {
-  let i = [...input];
+  let i = JSON.parse(JSON.stringify(input));
   setTimeout(() => {
     this.setState({ arr: i });
-    console.log(i);
-  }, algorithm.counter * 300);
+  }, algorithm.counter * 30);
   algorithm.counter += 1;
 }
 

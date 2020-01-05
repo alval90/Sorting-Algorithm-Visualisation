@@ -34,27 +34,21 @@ class App extends React.Component {
   };
 
   handleClick = () => {
+    let arr = JSON.parse(JSON.stringify(this.state.arr));
     switch (this.state.algorithm) {
       case "Bubble":
-        algorithm.bubbleSort.call(this, this.state.arr);
+        algorithm.bubbleSort.call(this, arr);
         break;
       case "Selection":
-        algorithm.selectionSort.call(this, this.state.arr);
+        algorithm.selectionSort.call(this, arr);
         break;
       case "Insertion":
         break;
-      case "Merge":
-        //algorithm.mergeSort.call(this, this.state.arr);
-        algorithm.mergeSortWrapper.call(this, this.state.arr);
-        break;
       case "Quicksort":
-        algorithm.quickSort.call(
-          this,
-          this.state.arr,
-          this.state.itemBlockStatus
-        );
+        algorithm.quickSort.call(this, arr, this.state.itemBlockStatus);
         break;
-      case "Heap":
+      case "Merge":
+        algorithm.mergeSortWrapper.call(this, arr);
         break;
       default:
         break;

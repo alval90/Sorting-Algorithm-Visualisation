@@ -40,9 +40,8 @@ const SimpleMenu = function(props) {
         <MenuItem onClick={() => handleClose("Insertion")}>
           Insertion sort
         </MenuItem>
-        <MenuItem onClick={() => handleClose("Merge")}>Merge sort</MenuItem>
         <MenuItem onClick={() => handleClose("Quicksort")}>Quicksort</MenuItem>
-        <MenuItem onClick={() => handleClose("Heap")}>Heap sort</MenuItem>
+        <MenuItem onClick={() => handleClose("Merge")}>Merge sort</MenuItem>
       </Menu>
     </div>
   );
