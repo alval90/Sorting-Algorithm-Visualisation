@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
+import Icon from "@material-ui/core/Icon";
 import SimpleMenu from "./Menu";
 import InputSlider from "./Slider";
 import ItemBlock from "./ItemBlock";
@@ -12,6 +13,7 @@ class App extends React.Component {
     this.state = {
       arr: [],
       algorithm: "",
+      speed: 30,
       isSorted: false,
       sorting: false
     };
@@ -28,7 +30,7 @@ class App extends React.Component {
   changeArrSize = size => {
     let arr = [];
     for (let i = 0; i < size; i++) {
-      let randomHeight = calcRandomInIntervall(5, 100);
+      let randomHeight = calcRandomInIntervall(20, 400);
       arr.push(new Item(randomHeight, "default", i));
     }
     this.setState({ arr: arr, isSorted: false });
@@ -36,21 +38,24 @@ class App extends React.Component {
 
   handleClick = () => {
     if (!this.state.isSorted && !this.state.sorting) {
-      this.setState({ sorting: true });
       let arr = JSON.parse(JSON.stringify(this.state.arr));
       switch (this.state.algorithm) {
-        case "Bubble":
+        case "Bubble Sort":
+          this.setState({ sorting: true });
           algorithm.bubbleSort.call(this, arr);
           break;
-        case "Selection":
+        case "Selection Sort":
+          this.setState({ sorting: true });
           algorithm.selectionSort.call(this, arr);
           break;
-        case "Insertion":
+        case "Insertion Sort":
           break;
-        case "Quicksort":
+        case "Quick Sort":
+          this.setState({ sorting: true });
           algorithm.quickSortWrapper.call(this, arr, 0, arr.length - 1);
           break;
-        case "Merge":
+        case "Merge Sort":
+          this.setState({ sorting: true });
           algorithm.mergeSortWrapper.call(this, arr);
           break;
         default:
@@ -81,7 +86,12 @@ class App extends React.Component {
     });
     return (
       <div>
-        <header style={{ display: "flex", alignItems: "center" }}>
+        <header
+          style={{
+            display: "flex",
+            alignItems: "center"
+          }}
+        >
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <SimpleMenu
               changeAlgorithm={this.changeAlgorithm}
@@ -96,10 +106,21 @@ class App extends React.Component {
           </div>
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <Button
-              disabled={this.state.sorting}
+              startIcon={
+                this.state.isSorted && !this.state.sorting ? (
+                  <Icon className="fas fa-undo" style={{ fontSize: "16px" }} />
+                ) : (
+                  <Icon
+                    className="fas fa-sort-amount-up"
+                    style={{ fontSize: "16px" }}
+                  />
+                )
+              }
+              //disabled={this.state.sorting}
               variant="contained"
               color="primary"
               onClick={this.handleClick}
+              style={{ width: "130px" }}
             >
               {this.state.sorting
                 ? "SORTING..."

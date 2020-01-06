@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import Icon from "@material-ui/core/Icon";
 
 const SimpleMenu = function(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -20,9 +21,15 @@ const SimpleMenu = function(props) {
   return (
     <div>
       <Button
+        startIcon={
+          <Icon className="fas fa-bars" style={{ fontSize: "16px" }} />
+        }
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
+        variant="contained"
+        color="primary"
+        style={{ width: "220px" }}
       >
         {props.algorithm || "Choose Algorithm"}
       </Button>
@@ -33,15 +40,21 @@ const SimpleMenu = function(props) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleClose("Bubble")}>Bubble sort</MenuItem>
-        <MenuItem onClick={() => handleClose("Selection")}>
-          Selection sort
+        <MenuItem onClick={() => handleClose("Bubble Sort")}>
+          Bubble Sort
         </MenuItem>
-        <MenuItem onClick={() => handleClose("Insertion")}>
-          Insertion sort
+        <MenuItem onClick={() => handleClose("Selection Sort")}>
+          Selection Sort
         </MenuItem>
-        <MenuItem onClick={() => handleClose("Quicksort")}>Quicksort</MenuItem>
-        <MenuItem onClick={() => handleClose("Merge")}>Merge sort</MenuItem>
+        <MenuItem onClick={() => handleClose("Insertion Sort")}>
+          Insertion Sort
+        </MenuItem>
+        <MenuItem onClick={() => handleClose("Quick Sort")}>
+          Quick Sort
+        </MenuItem>
+        <MenuItem onClick={() => handleClose("Merge Sort")}>
+          Merge sort
+        </MenuItem>
       </Menu>
     </div>
   );

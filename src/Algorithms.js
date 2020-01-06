@@ -1,9 +1,9 @@
 const algorithm = {
   bubbleSort: function(arr, index = 0, counter = 0, isSorted = false) {
     if (index === arr.length - counter - 1) {
-      arr = setItemStatus(arr, [], [], [index]);
+      setItemStatus(arr, [], [], [index]);
       if (isSorted) {
-        arr = setItemStatus(arr, [], [], [], true);
+        setItemStatus(arr, [], [], [], true);
         this.setState({ arr: arr, isSorted: true, sorting: false });
       } else {
         this.setState({ arr: arr, isSorted: true }, () =>
@@ -14,8 +14,8 @@ const algorithm = {
     }
     if (index < arr.length) {
       if (arr[index].height > arr[index + 1].height) {
-        arr = swapItems(arr, index, index + 1);
-        arr = setItemStatus(arr, [index], [index + 1, index + 2]);
+        swapItems(arr, index, index + 1);
+        setItemStatus(arr, [index], [index + 1, index + 2]);
         this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
@@ -26,12 +26,12 @@ const algorithm = {
                 counter,
                 false
               ),
-            30
+            this.state.speed
           )
         );
         return;
       } else {
-        arr = setItemStatus(arr, [index], [index + 1, index + 2]);
+        setItemStatus(arr, [index], [index + 1, index + 2]);
         this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
@@ -41,7 +41,7 @@ const algorithm = {
                 index + 1,
                 counter
               ),
-            30
+            this.state.speed
           )
         );
         return;
@@ -64,7 +64,7 @@ const algorithm = {
       // Define new minimum, if current item that is being analyzed is smaller than the current minimum
       // Change status of itemBlocks to highlight in respective color
       if (arr[index].height <= arr[minIndex].height) {
-        arr = setItemStatus(arr, [minIndex], [index, index + 1]);
+        setItemStatus(arr, [minIndex], [index, index + 1]);
         minIndex = index;
         this.setState({ arr: arr }, () =>
           setTimeout(
@@ -77,13 +77,13 @@ const algorithm = {
                 counter,
                 false
               ),
-            30
+            this.state.speed
           )
         );
         // Move one item ahead, if current item that is being analyzed is not smaller than the current minimum
         // Change status accordingly to use color highlighting
       } else if (arr[index].height > arr[minIndex].height) {
-        arr = setItemStatus(arr, [index], [index + 1]);
+        setItemStatus(arr, [index], [index + 1]);
         this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
@@ -94,7 +94,7 @@ const algorithm = {
                 minIndex,
                 counter
               ),
-            30
+            this.state.speed
           )
         );
       }
@@ -102,11 +102,11 @@ const algorithm = {
       // Swap new minimum with current starting item of the loop - Otherwise, consider array as sorted and fill the itemBlockStatus accordingly for color highlighting.
     } else {
       if (isSorted) {
-        arr = setItemStatus(arr, [], [], [], true);
+        setItemStatus(arr, [], [], [], true);
         this.setState({ arr: arr, isSorted: true, sorting: false });
       } else {
-        arr = swapItems(arr, counter, minIndex);
-        arr = setItemStatus(arr, [minIndex], [counter + 1], [counter]);
+        swapItems(arr, counter, minIndex);
+        setItemStatus(arr, [minIndex], [counter + 1], [counter]);
         this.setState({ arr: arr }, () =>
           setTimeout(
             () =>
@@ -118,7 +118,7 @@ const algorithm = {
                 counter + 1,
                 true
               ),
-            30
+            this.state.speed
           )
         );
       }
@@ -153,7 +153,7 @@ const algorithm = {
     algorithm.stateArr = JSON.parse(JSON.stringify(arr));
     algorithm.quickSort.call(this, arr, left, right);
     arr.map(item => (item.status = "sorted"));
-    setDelay.call(this, arr, true);
+    queueAnimation.call(this, arr, true);
     algorithm.counter = 1;
   },
   mergeSort: function(arr) {
@@ -218,19 +218,19 @@ function merge(left, right, sortedArray = []) {
         algorithm.stateArr[i].index === left[0].index ||
         algorithm.stateArr[i].index === right[0].index
       ) {
-        algorithm.stateArr[i].status = "analyzed";
+        setItemStatus(algorithm.stateArr, [], [i]);
       }
     }
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
     for (let i = 0; i < algorithm.stateArr.length; i++) {
       if (
         algorithm.stateArr[i].index === left[0].index ||
         algorithm.stateArr[i].index === right[0].index
       ) {
-        algorithm.stateArr[i].status = "default";
+        setItemStatus(algorithm.stateArr, [i], []);
       }
     }
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
     algorithm.counter -= 1;
     if (left[0].height < right[0].height) {
       sortedArray = [...sortedArray, left.shift()];
@@ -241,47 +241,51 @@ function merge(left, right, sortedArray = []) {
   while (left.length > 0) {
     for (let i = 0; i < algorithm.stateArr.length; i++) {
       if (algorithm.stateArr[i].index === left[0].index) {
-        algorithm.stateArr[i].status = "analyzed";
+        setItemStatus(algorithm.stateArr, [], [i]);
       }
     }
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
     for (let i = 0; i < algorithm.stateArr.length; i++) {
       if (algorithm.stateArr[i].index === left[0].index) {
-        algorithm.stateArr[i].status = "default";
+        setItemStatus(algorithm.stateArr, [i], []);
       }
     }
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
     algorithm.counter -= 1;
     sortedArray = [...sortedArray, left.shift()];
   }
   while (right.length > 0) {
     for (let i = 0; i < algorithm.stateArr.length; i++) {
       if (algorithm.stateArr[i].index === right[0].index) {
-        algorithm.stateArr[i].status = "analyzed";
+        setItemStatus(algorithm.stateArr, [], [i]);
       }
     }
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
     for (let i = 0; i < algorithm.stateArr.length; i++) {
       if (algorithm.stateArr[i].index === right[0].index) {
-        algorithm.stateArr[i].status = "default";
+        setItemStatus(algorithm.stateArr, [i], []);
       }
     }
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
     algorithm.counter -= 1;
     sortedArray = [...sortedArray, right.shift()];
   }
+  animateArraySorting.call(this, sortedArray);
+  if (algorithm.stateArr.length === sortedArray.length) {
+    setItemStatus(algorithm.stateArr, [], [], [], true);
+    queueAnimation.call(this, algorithm.stateArr, true);
+  }
+  return sortedArray;
+}
+
+function animateArraySorting(sortedArray) {
   let minimum = findMinimum(algorithm.stateArr, sortedArray);
   for (let i = 0; i < sortedArray.length; i++) {
     algorithm.stateArr[minimum + i] = JSON.parse(
       JSON.stringify(sortedArray[i])
     );
-    setDelay.call(this, algorithm.stateArr);
+    queueAnimation.call(this, algorithm.stateArr);
   }
-  if (algorithm.stateArr.length === sortedArray.length) {
-    algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [], [], true);
-    setDelay.call(this, algorithm.stateArr, true);
-  }
-  return sortedArray;
 }
 
 function findMinimum(unsortedArr, sortedArray) {
@@ -293,15 +297,15 @@ function findMinimum(unsortedArr, sortedArray) {
     }
   }
 }
-function setDelay(input, isSorted) {
-  let i = JSON.parse(JSON.stringify(input));
+function queueAnimation(updatedArray, isSorted) {
+  let arr = JSON.parse(JSON.stringify(updatedArray));
   setTimeout(() => {
     if (isSorted) {
-      this.setState({ arr: i, isSorted: true, sorting: false });
+      this.setState({ arr: arr, isSorted: true, sorting: false });
     } else {
-      this.setState({ arr: i });
+      this.setState({ arr: arr });
     }
-  }, algorithm.counter * 30);
+  }, algorithm.counter * this.state.speed);
   algorithm.counter += 1;
 }
 
@@ -312,29 +316,29 @@ function partition(arr, left, right) {
   let j = right;
   while (i <= j) {
     while (arr[i].height < pivot) {
-      algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [i]);
-      setDelay.call(this, algorithm.stateArr);
-      algorithm.stateArr = setItemStatus(algorithm.stateArr, [i], []);
-      setDelay.call(this, algorithm.stateArr);
+      setItemStatus(algorithm.stateArr, [], [i]);
+      queueAnimation.call(this, algorithm.stateArr);
+      setItemStatus(algorithm.stateArr, [i], []);
+      queueAnimation.call(this, algorithm.stateArr);
       algorithm.counter -= 1;
       i++;
     }
     while (arr[j].height > pivot) {
-      algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [j]);
-      setDelay.call(this, algorithm.stateArr);
-      algorithm.stateArr = setItemStatus(algorithm.stateArr, [j], []);
-      setDelay.call(this, algorithm.stateArr);
+      setItemStatus(algorithm.stateArr, [], [j]);
+      queueAnimation.call(this, algorithm.stateArr);
+      setItemStatus(algorithm.stateArr, [j], []);
+      queueAnimation.call(this, algorithm.stateArr);
       algorithm.counter -= 1;
       j--;
     }
     if (i <= j) {
       swapItems(arr, i, j);
-      algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [i, j]);
+      setItemStatus(algorithm.stateArr, [], [i, j]);
       swapItems(algorithm.stateArr, i, j);
-      setDelay.call(this, algorithm.stateArr);
-      algorithm.stateArr = setItemStatus(algorithm.stateArr, [i, j], []);
-      setDelay.call(this, algorithm.stateArr);
-      algorithm.counter -= 1;
+      queueAnimation.call(this, algorithm.stateArr);
+      setItemStatus(algorithm.stateArr, [i, j], []);
+      queueAnimation.call(this, algorithm.stateArr);
+      //algorithm.counter -= 1;
       i++;
       j--;
     }
