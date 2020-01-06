@@ -137,38 +137,20 @@ const algorithm = {
     }
     return arr;
   },
-  // quickSort: function(arr) {
-  //   if (arr.length <= 1) {
-  //     return arr;
-  //   }
-  //   let pivot = arr[0];
-  //   let right = [];
-  //   let equal = [];
-  //   let left = [];
-  //   for (let i = 1; i < arr.length; i++) {
-  //     if (arr[i] < pivot) {
-  //       left.push(arr[i]);
-  //     } else if (arr[i] === pivot) {
-  //       equal.push(arr[i]);
-  //     } else if (arr[i] > pivot) {
-  //       right.push(arr[i]);
-  //     }
-  //   }
-  //   arr = algorithm
-  //     .quickSort(left)
-  //     .concat(equal, pivot, algorithm.quickSort(right));
-  //   return arr;
-  // },
   quickSort: function(arr, left, right) {
-    if (left < right) {
-      let pivot = right;
-      let partitionIndex = partition.call(this, arr, pivot, left, right);
-      algorithm.quickSort.call(this, arr, left, partitionIndex - 1);
-      algorithm.quickSort.call(this, arr, partitionIndex + 1, right);
+    if (arr.length > 1) {
+      let index = partition.call(this, arr, left, right);
+      if (left < index - 1) {
+        algorithm.quickSort.call(this, arr, left, index - 1);
+      }
+      if (index < right) {
+        algorithm.quickSort.call(this, arr, index, right);
+      }
     }
     return arr;
   },
   quickSortWrapper: function(arr, left, right) {
+    algorithm.stateArr = JSON.parse(JSON.stringify(arr));
     algorithm.quickSort.call(this, arr, left, right);
     arr.map(item => (item.status = "sorted"));
     setDelay.call(this, arr, true);
@@ -323,29 +305,41 @@ function setDelay(input, isSorted) {
   algorithm.counter += 1;
 }
 
-//https://khan4019.github.io/front-end-Interview-Questions/sort.html#quickSort
-function partition(arr, pivot, left, right) {
-  let pivotValue = arr[pivot].height;
-  let partitionIndex = left;
-
-  for (var i = left; i < right; i++) {
-    arr = setItemStatus(arr, [], [i, partitionIndex]);
-    if (arr[i].height < pivotValue) {
-      arr = swapItems(arr, i, partitionIndex);
-      setDelay.call(this, arr);
-      partitionIndex++;
+//Adapted from https://www.guru99.com/quicksort-in-javascript.html
+function partition(arr, left, right) {
+  let pivot = arr[Math.floor((right + left) / 2)].height;
+  let i = left;
+  let j = right;
+  while (i <= j) {
+    while (arr[i].height < pivot) {
+      algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [i]);
+      setDelay.call(this, algorithm.stateArr);
+      algorithm.stateArr = setItemStatus(algorithm.stateArr, [i], []);
+      setDelay.call(this, algorithm.stateArr);
+      algorithm.counter -= 1;
+      i++;
     }
-    arr = setItemStatus(arr, [i, partitionIndex], []);
-    setDelay.call(this, arr);
-    algorithm.counter -= 1;
+    while (arr[j].height > pivot) {
+      algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [j]);
+      setDelay.call(this, algorithm.stateArr);
+      algorithm.stateArr = setItemStatus(algorithm.stateArr, [j], []);
+      setDelay.call(this, algorithm.stateArr);
+      algorithm.counter -= 1;
+      j--;
+    }
+    if (i <= j) {
+      swapItems(arr, i, j);
+      algorithm.stateArr = setItemStatus(algorithm.stateArr, [], [i, j]);
+      swapItems(algorithm.stateArr, i, j);
+      setDelay.call(this, algorithm.stateArr);
+      algorithm.stateArr = setItemStatus(algorithm.stateArr, [i, j], []);
+      setDelay.call(this, algorithm.stateArr);
+      algorithm.counter -= 1;
+      i++;
+      j--;
+    }
   }
-  arr = setItemStatus(arr, [], [i, partitionIndex]);
-  arr = swapItems(arr, right, partitionIndex);
-  setDelay.call(this, arr);
-  arr = setItemStatus(arr, [i, partitionIndex], []);
-  setDelay.call(this, arr);
-  algorithm.counter -= 1;
-  return partitionIndex;
+  return i;
 }
 
 export default algorithm;
