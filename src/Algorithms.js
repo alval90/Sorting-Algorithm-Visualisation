@@ -65,18 +65,51 @@ const algorithm = {
       }
     }
   },
-  insertionSort: function (arr) {
+  insertionSort: function (arr, itemBlockStatus, index = 0, back = 0, counter = 0) {
     // change code below this line
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = i; j >= 0; j--) {
-        if (arr[j] <= arr[j -1]) {
-          let tmp = arr[j];
-          arr[j] = arr[j - 1];
-          arr[j - 1] = tmp;
+    if (index < arr.length) {
+      if (back >= 0) {
+        if (arr[back] <= arr[back - 1]) {
+          let tmp = arr[back];
+          arr[back] = arr[back - 1];
+          arr[back - 1] = tmp;
+        } else if (arr[back] > arr[back - 1]) {
+          itemBlockStatus[back] = "default";
+          itemBlockStatus[back - 1] = "default";
+          itemBlockStatus[index] = "analyzed";
+          itemBlockStatus[index + 1] = "analyzed";
+          this.setState({arr: arr, itemBlockStatus: itemBlockStatus},
+            () => setTimeout(() => algorithm.insertionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, index + 1, counter + 1), 30)
+          ); 
+          return;
         }
-      }
+        itemBlockStatus[back + 1] = "default";
+        itemBlockStatus[back] = "analyzed";
+        itemBlockStatus[back - 1] = "analyzed"
+        this.setState({arr: arr, itemBlockStatus: itemBlockStatus},
+          () => setTimeout(() => algorithm.insertionSort.call(this, this.state.arr, this.state.itemBlockStatus, index, back - 1, counter), 30)
+        ); 
+      } else {
+        itemBlockStatus[back + 1] = "default";
+        itemBlockStatus[index] = "analyzed";
+        itemBlockStatus[index + 1] = "analyzed";
+        this.setState({arr: arr, itemBlockStatus: itemBlockStatus},
+          () => setTimeout(() => algorithm.insertionSort.call(this, this.state.arr, this.state.itemBlockStatus, index + 1, index + 1, counter + 1), 30)
+        ); 
+      } 
+    } else {
+      this.setState({isSorted: true, itemBlockStatus: itemBlockStatus.fill("sorted")});
     }
-    return arr;
+    // for (let i = 0; i < arr.length; i++) {
+    //   for (let j = i; j >= 0; j--) {
+    //     if (arr[j] <= arr[j -1]) {
+    //       let tmp = arr[j];
+    //       arr[j] = arr[j - 1];
+    //       arr[j - 1] = tmp;
+    //     }
+    //   }
+    // }
+    // return arr;
   }
 }
 

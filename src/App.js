@@ -41,6 +41,7 @@ class App extends React.Component {
         algorithm.selectionSort.call(this, this.state.arr, this.state.itemBlockStatus);
         break
       case "Insertion":
+        algorithm.insertionSort.call(this, this.state.arr, this.state.itemBlockStatus);
         break;
       case "Merge":
         break;
