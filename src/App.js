@@ -50,7 +50,7 @@ class App extends React.Component {
           break;
         case "Insertion Sort":
           this.setState({ sorting: true });
-          algorithm.insertionSort.call(this, arr);
+          algorithm.insertionSortWrapper.call(this, arr);
           break;
         case "Quick Sort":
           this.setState({ sorting: true });

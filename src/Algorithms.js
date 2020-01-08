@@ -163,93 +163,23 @@ const algorithm = {
       }
     }
   },
-  insertionSort: function(arr, index = 0, back = 0, counter = 0) {
-    debugger;
-    if (index < arr.length) {
-      if (back > 0) {
-        if (arr[back].height <= arr[back - 1].height) {
-          swapItems(arr, back, back - 1);
-          // let tmp = arr[back];
-          // arr[back] = arr[back - 1];
-          // arr[back - 1] = tmp;
-        } else if (arr[back].height > arr[back - 1].height) {
-          setItemStatus(arr, [back, back + 1], [index, index - 1]);
-          // itemBlockStatus[back] = "default";
-          // itemBlockStatus[back - 1] = "default";
-          // itemBlockStatus[index] = "analyzed";
-          // itemBlockStatus[index + 1] = "analyzed";
-          this.setState(
-            {
-              arr: arr
-            },
-            () =>
-              setTimeout(
-                () =>
-                  algorithm.insertionSort.call(
-                    this,
-                    arr,
-                    index + 1,
-                    index + 1,
-                    counter + 1
-                  ),
-                this.state.speed
-              )
-          );
-          return;
-        }
-        setItemStatus(arr, [back + 1], [back, back - 1]);
-        // itemBlockStatus[back + 1] = "default";
-        // itemBlockStatus[back] = "analyzed";
-        // itemBlockStatus[back - 1] = "analyzed";
-        this.setState(
-          {
-            arr: arr
-          },
-          () =>
-            setTimeout(
-              () =>
-                algorithm.insertionSort.call(
-                  this,
-                  arr,
-                  index,
-                  back - 1,
-                  counter
-                ),
-              this.state.speed
-            )
-        );
-      } else {
-        setItemStatus(arr, [back + 1], [index, index + 1]);
-        // itemBlockStatus[back + 1] = "default";
-        // itemBlockStatus[index] = "analyzed";
-        // itemBlockStatus[index + 1] = "analyzed";
-        this.setState(
-          {
-            arr: arr
-          },
-          () =>
-            setTimeout(
-              () =>
-                algorithm.insertionSort.call(
-                  this,
-                  arr,
-                  index + 1,
-                  index + 1,
-                  counter + 1
-                ),
-              this.state.speed
-            )
-        );
+  insertionSort: function(arr) {
+    for (let i = 1; i < arr.length; i++) {
+      for (let j = i; j > 0 && arr[j].height < arr[j - 1].height; j--) {
+        setItemStatus(arr, [], [j, j - 1]);
+        swapItems(arr, j, j - 1);
+        queueAnimation.call(this, arr);
+        setItemStatus(arr, [j, j - 1], []);
+        queueAnimation.call(this, arr);
+        algorithm.counter -= 1;
       }
-    } else {
-      setItemStatus(arr, [], [], [], true);
-      this.setState({
-        arr: arr,
-        isSorted: true,
-        sorting: false
-      });
     }
-    return arr;
+    setItemStatus(arr, [], [], [], true);
+    queueAnimation.call(this, arr, true);
+  },
+  insertionSortWrapper: function(arr) {
+    algorithm.insertionSort.call(this, arr);
+    algorithm.counter = 1;
   },
   quickSort: function(arr, left, right) {
     if (arr.length > 1) {
