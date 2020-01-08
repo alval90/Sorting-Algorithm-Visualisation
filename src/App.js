@@ -49,7 +49,7 @@ class App extends React.Component {
           algorithm.selectionSort.call(this, arr);
           break;
         case "Insertion Sort":
-          algorithm.insertionSort.call(this, arr);
+          algorithm.insertionSortWrapper.call(this, arr);
           break;
         case "Quick Sort":
           this.setState({ sorting: true });
@@ -111,11 +111,11 @@ class App extends React.Component {
                 this.state.isSorted && !this.state.sorting ? (
                   <Icon className="fas fa-undo" style={{ fontSize: "16px" }} />
                 ) : (
-                  <Icon
-                    className="fas fa-sort-amount-up"
-                    style={{ fontSize: "16px" }}
-                  />
-                )
+                    <Icon
+                      className="fas fa-sort-amount-up"
+                      style={{ fontSize: "16px" }}
+                    />
+                  )
               }
               //disabled={this.state.sorting}
               variant="contained"
@@ -126,8 +126,8 @@ class App extends React.Component {
               {this.state.sorting
                 ? "SORTING..."
                 : this.state.isSorted
-                ? "RESET"
-                : "SORT"}
+                  ? "RESET"
+                  : "SORT"}
             </Button>
           </div>
         </header>
