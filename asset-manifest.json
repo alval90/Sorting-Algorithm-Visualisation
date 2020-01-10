@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/sortingAlgorithms/static/css/main.5854e8d3.chunk.css",
-    "main.js": "/sortingAlgorithms/static/js/main.281a50cb.chunk.js",
-    "main.js.map": "/sortingAlgorithms/static/js/main.281a50cb.chunk.js.map",
+    "main.js": "/sortingAlgorithms/static/js/main.b7891548.chunk.js",
+    "main.js.map": "/sortingAlgorithms/static/js/main.b7891548.chunk.js.map",
     "runtime-main.js": "/sortingAlgorithms/static/js/runtime-main.83dfe268.js",
     "runtime-main.js.map": "/sortingAlgorithms/static/js/runtime-main.83dfe268.js.map",
     "static/js/2.6bf03fc7.chunk.js": "/sortingAlgorithms/static/js/2.6bf03fc7.chunk.js",
     "static/js/2.6bf03fc7.chunk.js.map": "/sortingAlgorithms/static/js/2.6bf03fc7.chunk.js.map",
     "index.html": "/sortingAlgorithms/index.html",
-    "precache-manifest.39289400bea31e88d57a592b431cbaa3.js": "/sortingAlgorithms/precache-manifest.39289400bea31e88d57a592b431cbaa3.js",
+    "precache-manifest.3dd57ec01c29f4fd7ca9d905e167d408.js": "/sortingAlgorithms/precache-manifest.3dd57ec01c29f4fd7ca9d905e167d408.js",
     "service-worker.js": "/sortingAlgorithms/service-worker.js",
     "static/css/main.5854e8d3.chunk.css.map": "/sortingAlgorithms/static/css/main.5854e8d3.chunk.css.map"
   },
@@ -16,6 +16,6 @@
     "static/js/runtime-main.83dfe268.js",
     "static/js/2.6bf03fc7.chunk.js",
     "static/css/main.5854e8d3.chunk.css",
-    "static/js/main.281a50cb.chunk.js"
+    "static/js/main.b7891548.chunk.js"
   ]
 }
