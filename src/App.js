@@ -15,7 +15,7 @@ class App extends React.Component {
       algorithm: "",
       speed: 30,
       isSorted: false,
-      sorting: false
+      isSorting: false
     };
   }
 
@@ -38,39 +38,39 @@ class App extends React.Component {
 
   handleClick = () => {
     if (this.state.arr.length > 1) {
-      if (!this.state.isSorted && !this.state.sorting) {
+      if (!this.state.isSorted && !this.state.isSorting) {
         let arr = JSON.parse(JSON.stringify(this.state.arr));
         switch (this.state.algorithm) {
           case "Bubble Sort":
-            this.setState({ sorting: true });
+            this.setState({ isSorting: true });
             algorithm.bubbleSortWrapper.call(this, arr);
             break;
           case "Selection Sort":
-            this.setState({ sorting: true });
+            this.setState({ isSorting: true });
             algorithm.selectionSortWrapper.call(this, arr);
             break;
           case "Insertion Sort":
-            this.setState({ sorting: true });
+            this.setState({ isSorting: true });
             algorithm.insertionSortWrapper.call(this, arr);
             break;
           case "Quick Sort":
-            this.setState({ sorting: true });
+            this.setState({ isSorting: true });
             algorithm.quickSortWrapper.call(this, arr, 0, arr.length - 1);
             break;
           case "Merge Sort":
-            this.setState({ sorting: true });
+            this.setState({ isSorting: true });
             algorithm.mergeSortWrapper.call(this, arr);
             break;
           default:
             break;
         }
-      } else if (!this.state.isSorted && this.state.sorting) {
+      } else if (!this.state.isSorted && this.state.isSorting) {
         //Note to myself: Hacky implementation. Normally refraing from use, because of termination of global setTimeouts.
         let highestTimeoutId = setTimeout(";");
         for (let i = 0; i < highestTimeoutId; i++) {
           clearTimeout(i);
         }
-        this.setState({ isSorted: true, sorting: false });
+        this.setState({ isSorted: true, isSorting: false });
       } else {
         let arr = JSON.parse(JSON.stringify(this.state.arr));
         arr.sort((a, b) => a.index - b.index);
@@ -110,14 +110,14 @@ class App extends React.Component {
           </div>
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <InputSlider
-              disabled={this.state.sorting}
+              disabled={this.state.isSorting}
               changeArrSize={this.changeArrSize}
             />
           </div>
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <Button
               startIcon={
-                this.state.sorting
+                this.state.isSorting
                   ? (<Icon className="fas fa-stop" style={{ fontSize: "16px" }} />)
                   : this.state.isSorted
                     ? (<Icon className="fas fa-undo" style={{ fontSize: "16px" }} />)
@@ -128,7 +128,7 @@ class App extends React.Component {
               onClick={this.handleClick}
               style={{ width: "130px" }}
             >
-              {this.state.sorting
+              {this.state.isSorting
                 ? "STOP"
                 : this.state.isSorted
                   ? "RESET"

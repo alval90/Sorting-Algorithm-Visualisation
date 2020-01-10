@@ -237,7 +237,7 @@ function queueAnimation(updatedArray, isSorted) {
       this.setState({
         arr: arr,
         isSorted: true,
-        sorting: false
+        isSorting: false
       });
     } else {
       this.setState({
