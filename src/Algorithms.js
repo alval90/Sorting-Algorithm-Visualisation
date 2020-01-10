@@ -21,6 +21,10 @@ const algorithm = {
     setItemStatus(arr, [], [], [], true);
     queueAnimation.call(this, arr, true);
   },
+  bubbleSortWrapper: function (arr) {
+    algorithm.bubbleSort.call(this, arr);
+    algorithm.counter = 1;
+  },
   selectionSort: function (arr) {
     let j = 0;
     while (j < arr.length) {
@@ -42,6 +46,10 @@ const algorithm = {
     }
     setItemStatus(arr, [], [], [], true);
     queueAnimation.call(this, arr, true);
+  },
+  selectionSortWrapper: function (arr) {
+    algorithm.selectionSort.call(this, arr);
+    algorithm.counter = 1;
   },
   insertionSort: function (arr) {
     for (let i = 1; i < arr.length; i++) {

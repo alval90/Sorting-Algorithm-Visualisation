@@ -37,38 +37,46 @@ class App extends React.Component {
   };
 
   handleClick = () => {
-    if (!this.state.isSorted && !this.state.sorting) {
-      let arr = JSON.parse(JSON.stringify(this.state.arr));
-      switch (this.state.algorithm) {
-        case "Bubble Sort":
-          this.setState({ sorting: true });
-          algorithm.bubbleSort.call(this, arr);
-          break;
-        case "Selection Sort":
-          this.setState({ sorting: true });
-          algorithm.selectionSort.call(this, arr);
-          break;
-        case "Insertion Sort":
-          this.setState({ sorting: true });
-          algorithm.insertionSortWrapper.call(this, arr);
-          break;
-        case "Quick Sort":
-          this.setState({ sorting: true });
-          algorithm.quickSortWrapper.call(this, arr, 0, arr.length - 1);
-          break;
-        case "Merge Sort":
-          this.setState({ sorting: true });
-          algorithm.mergeSortWrapper.call(this, arr);
-          break;
-        default:
-          break;
+    if (this.state.arr.length > 1) {
+      if (!this.state.isSorted && !this.state.sorting) {
+        let arr = JSON.parse(JSON.stringify(this.state.arr));
+        switch (this.state.algorithm) {
+          case "Bubble Sort":
+            this.setState({ sorting: true });
+            algorithm.bubbleSortWrapper.call(this, arr);
+            break;
+          case "Selection Sort":
+            this.setState({ sorting: true });
+            algorithm.selectionSortWrapper.call(this, arr);
+            break;
+          case "Insertion Sort":
+            this.setState({ sorting: true });
+            algorithm.insertionSortWrapper.call(this, arr);
+            break;
+          case "Quick Sort":
+            this.setState({ sorting: true });
+            algorithm.quickSortWrapper.call(this, arr, 0, arr.length - 1);
+            break;
+          case "Merge Sort":
+            this.setState({ sorting: true });
+            algorithm.mergeSortWrapper.call(this, arr);
+            break;
+          default:
+            break;
+        }
+      } else if (!this.state.isSorted && this.state.sorting) {
+        //Note to myself: Hacky implementation. Normally refraing from use, because of termination of global setTimeouts.
+        let highestTimeoutId = setTimeout(";");
+        for (let i = 0; i < highestTimeoutId; i++) {
+          clearTimeout(i);
+        }
+        this.setState({ isSorted: true, sorting: false });
+      } else {
+        let arr = JSON.parse(JSON.stringify(this.state.arr));
+        arr.sort((a, b) => a.index - b.index);
+        arr.map(item => (item.status = "default"));
+        this.setState({ arr: arr, isSorted: false });
       }
-    } else if (!this.state.isSorted && this.state.sorting) {
-    } else {
-      let arr = JSON.parse(JSON.stringify(this.state.arr));
-      arr.sort((a, b) => a.index - b.index);
-      arr.map(item => (item.status = "default"));
-      this.setState({ arr: arr, isSorted: false });
     }
   };
 
@@ -109,26 +117,22 @@ class App extends React.Component {
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <Button
               startIcon={
-                this.state.isSorted && !this.state.sorting ? (
-                  <Icon className="fas fa-undo" style={{ fontSize: "16px" }} />
-                ) : (
-                  <Icon
-                    className="fas fa-sort-amount-up"
-                    style={{ fontSize: "16px" }}
-                  />
-                )
+                this.state.sorting
+                  ? (<Icon className="fas fa-stop" style={{ fontSize: "16px" }} />)
+                  : this.state.isSorted
+                    ? (<Icon className="fas fa-undo" style={{ fontSize: "16px" }} />)
+                    : (<Icon className="fas fa-sort-amount-up" style={{ fontSize: "16px" }} />)
               }
-              //disabled={this.state.sorting}
               variant="contained"
               color="primary"
               onClick={this.handleClick}
               style={{ width: "130px" }}
             >
               {this.state.sorting
-                ? "SORTING..."
+                ? "STOP"
                 : this.state.isSorted
-                ? "RESET"
-                : "SORT"}
+                  ? "RESET"
+                  : "SORT"}
             </Button>
           </div>
         </header>
