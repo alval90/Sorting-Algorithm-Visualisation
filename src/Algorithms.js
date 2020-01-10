@@ -22,10 +22,10 @@ const algorithm = {
     queueAnimation.call(this, arr, true);
   },
   selectionSort: function (arr) {
-    let j = 0,
-      minIndex = 0
+    let j = 0;
     while (j < arr.length) {
-      for (let i = j, minimum = arr[j].height; i < arr.length; i++) {
+      let minIndex = j;
+      for (let i = j, minimum = arr[minIndex].height; i < arr.length; i++) {
         setItemStatus(arr, [i - 1], [i, minIndex]);
         queueAnimation.call(this, arr);
         if (arr[i].height < minimum) {
@@ -34,100 +34,15 @@ const algorithm = {
           minIndex = i;
         }
       }
-      swapItems(arr, j, minIndex);
+      if (minIndex != j) {
+        swapItems(arr, j, minIndex);
+      }
       setItemStatus(arr, [j, arr.length - 1], [], [j]);
       j++;
     }
     setItemStatus(arr, [], [], [], true);
     queueAnimation.call(this, arr, true);
   },
-
-
-  // function (
-  //   arr,
-  //   index = 0,
-  //   minIndex = 0,
-  //   counter = 0,
-  //   isSorted = false
-  // ) {
-  //   // Check if every itemblock has been considered as current minimum value
-  //   if (index < arr.length) {
-  //     // Define new minimum, if current item that is being analyzed is smaller than the current minimum
-  //     // Change status of itemBlocks to highlight in respective color
-  //     if (arr[index].height <= arr[minIndex].height) {
-  //       setItemStatus(arr, [minIndex], [index, index + 1]);
-  //       minIndex = index;
-  //       this.setState({
-  //           arr: arr
-  //         },
-  //         () =>
-  //         setTimeout(
-  //           () =>
-  //           algorithm.selectionSort.call(
-  //             this,
-  //             this.state.arr,
-  //             index + 1,
-  //             minIndex,
-  //             counter,
-  //             false
-  //           ),
-  //           this.state.speed
-  //         )
-  //       );
-  //       // Move one item ahead, if current item that is being analyzed is not smaller than the current minimum
-  //       // Change status accordingly to use color highlighting
-  //     } else if (arr[index].height > arr[minIndex].height) {
-  //       setItemStatus(arr, [index], [index + 1]);
-  //       this.setState({
-  //           arr: arr
-  //         },
-  //         () =>
-  //         setTimeout(
-  //           () =>
-  //           algorithm.selectionSort.call(
-  //             this,
-  //             this.state.arr,
-  //             index + 1,
-  //             minIndex,
-  //             counter
-  //           ),
-  //           this.state.speed
-  //         )
-  //       );
-  //     }
-  //     // After going through all items to check for a new minimum, check if items need to be swapped to further sort the array
-  //     // Swap new minimum with current starting item of the loop - Otherwise, consider array as sorted and fill the itemBlockStatus accordingly for color highlighting.
-  //   } else {
-  //     if (isSorted) {
-  //       setItemStatus(arr, [], [], [], true);
-  //       this.setState({
-  //         arr: arr,
-  //         isSorted: true,
-  //         sorting: false
-  //       });
-  //     } else {
-  //       swapItems(arr, counter, minIndex);
-  //       setItemStatus(arr, [minIndex], [counter + 1], [counter]);
-  //       this.setState({
-  //           arr: arr
-  //         },
-  //         () =>
-  //         setTimeout(
-  //           () =>
-  //           algorithm.selectionSort.call(
-  //             this,
-  //             this.state.arr,
-  //             counter + 1,
-  //             counter + 1,
-  //             counter + 1,
-  //             true
-  //           ),
-  //           this.state.speed
-  //         )
-  //       );
-  //     }
-  //   }
-  // },
   insertionSort: function (arr) {
     for (let i = 1; i < arr.length; i++) {
       for (let j = i; j > 0 && arr[j].height < arr[j - 1].height; j--) {
