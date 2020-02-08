@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
-import SimpleMenu from "./Menu";
-import InputSlider from "./Slider";
-import ItemBlock from "./ItemBlock";
+import SimpleMenu from "../menu/Menu";
+import InputSlider from "../slider/Slider";
+import ItemBlock from "../itemBlock/ItemBlock";
 import algorithm from "./Algorithms";
 import "./App.css";
 
@@ -117,11 +117,16 @@ class App extends React.Component {
           <div style={{ display: "flex", flex: 1, justifyContent: "center" }}>
             <Button
               startIcon={
-                this.state.isSorting
-                  ? (<Icon className="fas fa-stop" style={{ fontSize: "16px" }} />)
-                  : this.state.isSorted
-                    ? (<Icon className="fas fa-undo" style={{ fontSize: "16px" }} />)
-                    : (<Icon className="fas fa-sort-amount-up" style={{ fontSize: "16px" }} />)
+                this.state.isSorting ? (
+                  <Icon className="fas fa-stop" style={{ fontSize: "16px" }} />
+                ) : this.state.isSorted ? (
+                  <Icon className="fas fa-undo" style={{ fontSize: "16px" }} />
+                ) : (
+                  <Icon
+                    className="fas fa-sort-amount-up"
+                    style={{ fontSize: "16px" }}
+                  />
+                )
               }
               variant="contained"
               color="primary"
@@ -131,8 +136,8 @@ class App extends React.Component {
               {this.state.isSorting
                 ? "STOP"
                 : this.state.isSorted
-                  ? "RESET"
-                  : "SORT"}
+                ? "RESET"
+                : "SORT"}
             </Button>
           </div>
         </header>
